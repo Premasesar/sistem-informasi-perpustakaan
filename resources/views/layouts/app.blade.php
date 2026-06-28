@@ -164,7 +164,7 @@
                 <i class="fas fa-book-open"></i>
             </div>
             <div>
-                <h6 class="fw-bold mb-0 text-dark">Sipus Sekolah</h6>
+                <h6 class="fw-bold mb-0 text-dark">Sistem Informasi Perpustakaan</h6>
                 <small class="text-muted" style="font-size: 0.75rem;">STMIK El Rahma</small>
             </div>
         </div>
