@@ -173,14 +173,20 @@
                 <p><b>STMIK El RAHMA YOGYAKARTA</b></p>
             </div>
 
-            <form action="{{ route('dashboard') }}" method="GET">
+            <form action="{{ route('login.post') }}" method="POST">
                 @csrf
-                
+
+                @if ($errors->any())
+                    <div class="alert alert-danger rounded-3 py-2 px-3 mb-3 small">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
                 <div class="mb-3">
                     <label class="form-label fw-medium text-dark small">Alamat Email</label>
                     <div class="input-group">
                         <span class="input-group-text bg-white"><i class="fas fa-envelope"></i></span>
-                        <input type="email" name="email" class="form-control with-icon" placeholder="admin@elrahma.ac.id" required autofocus>
+                        <input type="email" name="email" class="form-control with-icon" value="{{ old('email') }}" placeholder="admin@elrahma.ac.id" required autofocus>
                     </div>
                 </div>
 
@@ -199,7 +205,7 @@
                 </div>
 
                 <div class="mb-4 form-check">
-                    <input type="checkbox" class="form-check-input" id="remember" style="cursor: pointer;">
+                    <input type="checkbox" name="remember" class="form-check-input" id="remember" style="cursor: pointer;">
                     <label class="form-check-label text-muted small" for="remember" style="cursor: pointer;">Ingat Saya</label>
                 </div>
 

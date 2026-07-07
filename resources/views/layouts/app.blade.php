@@ -184,9 +184,13 @@
             </a>
 
             <hr style="border-color: var(--secondary-color); margin: 15px 20px; opacity: 0.5;">
-            <a class="nav-link" href="{{ route('login') }}" style="color: #dc3545;">
-                <i class="fas fa-sign-out-alt fa-fw"></i> Keluar
-            </a>
+
+            <form action="{{ route('logout') }}" method="POST" class="px-2">
+                @csrf
+                <button type="submit" class="nav-link border-0 bg-transparent w-100 text-start" style="color: #dc3545;">
+                    <i class="fas fa-sign-out-alt fa-fw"></i> Keluar
+                </button>
+            </form>
         </nav>
         
         <div class="mt-auto">
