@@ -158,6 +158,27 @@
             color: var(--primary-hover);
             text-decoration: underline;
         }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 2rem 1.5rem;
+                border-radius: 18px;
+            }
+            .logo-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-height: 700px) {
+            body, html { overflow-y: auto; }
+            .login-bg {
+                height: auto;
+                min-height: 100vh;
+                padding: 2rem 0;
+            }
+        }
     </style>
 </head>
 <body>

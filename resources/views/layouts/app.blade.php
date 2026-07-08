@@ -11,15 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Variabel Warna Modern - Nuansa Hijau STMIK El Rahma */
         :root {
-            --primary-color: #07863A; /* Hijau utama dari poster */
-            --primary-hover: #056b2e; /* Hijau lebih gelap untuk hover */
-            --accent-color: #FFC107; /* Aksen kuning dari poster */
-            --secondary-color: #E8F5E9; /* Hijau sangat muda untuk panel/aksen */
-            --text-main: #1a2e21; /* Teks utama bernuansa hijau gelap */
-            --text-muted: #798f80; /* Teks redup */
-            --bg-body: #F2F8F4; /* Background body dengan hint hijau lembut */
+            --primary-color: #07863A;
+            --primary-hover: #056b2e;
+            --accent-color: #FFC107;
+            --secondary-color: #E8F5E9;
+            --text-main: #1a2e21;
+            --text-muted: #798f80;
+            --bg-body: #F2F8F4;
             --white: #FFFFFF;
         }
 
@@ -30,7 +29,6 @@
             overflow-x: hidden;
         }
 
-        /* Sidebar Styling Modern */
         .sidebar {
             width: 280px;
             background: var(--white);
@@ -40,11 +38,12 @@
             left: 0;
             padding: 2rem 1.5rem;
             box-shadow: 14px 0 24px rgba(7, 134, 58, 0.06);
-            z-index: 1000;
+            z-index: 1050;
             border-top-right-radius: 20px;
             border-bottom-right-radius: 20px;
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s ease;
         }
 
         .sidebar-header {
@@ -90,14 +89,13 @@
             box-shadow: 0 4px 12px rgba(7, 134, 58, 0.2);
         }
 
-        /* Main Content Area */
         .main-content {
             margin-left: 280px;
             padding: 2rem 3rem;
             min-height: 100vh;
+            transition: margin-left 0.3s ease;
         }
 
-        /* Navbar/Top Bar Styling */
         .topbar {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
@@ -110,7 +108,6 @@
             align-items: center;
         }
 
-        /* Card Styling Modern */
         .card {
             border: none;
             border-radius: 20px;
@@ -141,7 +138,6 @@
             box-shadow: 0 4px 12px rgba(7, 134, 58, 0.3);
         }
         
-        /* Table Styling Modern */
         .table > :not(caption) > * > * {
             padding: 1rem 1rem;
             border-bottom-color: #E8F5E9;
@@ -154,11 +150,66 @@
             letter-spacing: 0.5px;
             border-bottom: none !important;
         }
+
+        /* ===== RESPONSIVE: overlay & tombol menu (mobile) ===== */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1040;
+        }
+        .sidebar-overlay.show { display: block; }
+
+        .btn-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+        .btn-menu-toggle:hover { background: var(--secondary-color); }
+
+        /* ===== RESPONSIVE: sembunyikan sidebar di layar kecil ===== */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1.25rem 1rem;
+            }
+            .topbar {
+                padding: 12px 16px;
+                border-radius: 14px;
+            }
+            .topbar h4 {
+                font-size: 1.15rem;
+            }
+            .btn-menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content { padding: 1rem 0.75rem; }
+            .card-body { padding: 1rem !important; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="sidebar" id="sidebarMenu">
         <div class="sidebar-header d-flex align-items-center gap-3">
             <div class="sidebar-logo-icon">
                 <i class="fas fa-book-open"></i>
@@ -209,9 +260,14 @@
     <div class="main-content">
         
         <div class="topbar">
-            <div>
-                <small class="text-muted fw-medium">Halaman Utama /</small>
-                <h4 class="fw-bold mb-0" style="color: var(--text-main);">@yield('page-title')</h4>
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn-menu-toggle" id="menuToggleBtn" type="button">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div>
+                    <small class="text-muted fw-medium">Halaman Utama /</small>
+                    <h4 class="fw-bold mb-0" style="color: var(--text-main);">@yield('page-title')</h4>
+                </div>
             </div>
             <div class="d-flex align-items-center gap-3">
                 <div class="bg-light p-2 rounded-circle" style="cursor: pointer; color: var(--primary-color);">
@@ -239,6 +295,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const sidebarEl = document.getElementById('sidebarMenu');
+        const overlayEl = document.getElementById('sidebarOverlay');
+        const menuBtn = document.getElementById('menuToggleBtn');
+
+        function closeSidebar() {
+            sidebarEl.classList.remove('show');
+            overlayEl.classList.remove('show');
+        }
+
+        menuBtn?.addEventListener('click', () => {
+            sidebarEl.classList.toggle('show');
+            overlayEl.classList.toggle('show');
+        });
+        overlayEl?.addEventListener('click', closeSidebar);
+
+        // Tutup sidebar otomatis kalau menu diklik (khusus mobile)
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 992) closeSidebar();
+            });
+        });
+    </script>
     @yield('scripts')
 </body>
 </html>
